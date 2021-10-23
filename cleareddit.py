@@ -6,8 +6,6 @@ import csv
 import textwrap
 
 def getredditor(user):
-    creds = []
-    print('start')
     with open("RedditCredentials.csv",'r') as redditcreds:
         csv_reader = csv.DictReader(redditcreds,delimiter=',',)
         for cred in csv_reader:
@@ -76,50 +74,24 @@ def subfind(user,delcom,delsub):
                 subreddits.append(submission.subreddit.display_name)
     return subreddits
 
-def clear(user,delcom,delsub,sublist,listtype,daterange):
+def clear(user,sublist,delcom,delsub,listtype,daterange,voterange):
     redditor = getredditor(user)
     if delcom == 1:
         for comment in redditor.comments.new():
-            if comment.subreddit.display_name in sublist and listtype == 1:
+            age = (time.time() - comment.created_utc())/86400
+            if comment.subreddit.display_name in sublist and listtype == 1 or daterange[0] < age or daterange[1] > age \
+                or voterange[0] < comment.score or voterange[1] > comment.score or comment.subreddit.display_name not in sublist and listtype == 0:
                 print("keep" + comment.body)
-            elif comment.subreddit.display_name in sublist and listtype == 0 :#or comment.created_utc in daterange and listtype == 1:
+            else:#or comment.created_utc in daterange and listtype == 1:
                 print("Deleted " + comment.body)
-            else:
-                print("Keep comment" + comment.body)
+
     if delsub == 1:
         for submission in redditor.submissions.new():
-            if submission.subreddit.display_name in sublist and listtype == 1:
+            age = (time.time() - submission.created_utc())/86400
+            score = submission.score
+            if submission.subreddit.display_name in sublist and listtype == 1 or daterange[0] < age or daterange[1] > age \
+                or voterange[0] < score or voterange[1] > score or submission.subreddit.display_name not in sublist and listtype == 0:
                 print("keep" + submission.title)
-            elif submission.subreddit.display_name in sublist and listtype == 0 :#or submission.created_utc in daterange and listtype == 1:
-                print("Deleted " + submission.title)
             else:
                 print("Keep comment" + submission.title)
 
-# def choosecontent(user):
-#     comments = []
-#     redditor = getredditor(user)
-#     for comment in redditor.comments.new(limit=None):
-#             # if delcom == 1:
-#         body = '\n'.join(textwrap.wrap(comment.body,80))
-#         temp = [str(comment.subreddit),str(comment.score),"comment"]
-#         content = ' - '.join(temp)
-#         content = content + '\n'+ body
-#         contlist = [content]
-#         comments.append(contlist)
-#     return comments
-    # return comments
-            # if comment.subreddit.display_name in sublist and listtype == 1:
-            #     content = python
-            #     comments.append(content)
-            # elif comment.subreddit.display_name in sublist and listtype == 0 :#or comment.created_utc in daterange and listtype == 1:
-            #     print("Deleted " + comment.body)
-            # else:
-            #     print("Keep comment" + comment.body)
-    # if delsub == 1:
-    #     for submission in redditor.submissions.new():
-    #         if submission.subreddit.display_name in sublist and listtype == 1:
-    #             print("keep" + submission.title)
-    #         elif submission.subreddit.display_name in sublist and listtype == 0 :#or submission.created_utc in daterange and listtype == 1:
-    #             print("Deleted " + submission.title)
-    #         else:
-    #             print("Keep comment" + submission.title)

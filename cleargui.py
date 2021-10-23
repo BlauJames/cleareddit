@@ -89,7 +89,7 @@ class login:
         
         self.settingbut = tk.Button(self.master, text='Select Subreddits',command = self.subselect)
         self.settingbut.grid(row=4,column=3,padx=5,sticky="ew")
-        self.sets = [self.clicked,self.minvotes,self.maxvotes,self.enddays,self.startdays,self.comdel,self.subdel,self.listtype]
+        self.sets = [self.comdel.get(),self.subdel.get(),self.listtype.get(),[self.minvotes.get(),self.maxvotes.get()],[self.enddays.get(),self.startdays.get()]]
 
     def adduser(self):
         self.usermenu = tk.Toplevel()
@@ -112,7 +112,7 @@ class login:
             self.ent.pack(side=tk.RIGHT, 
                     expand=tk.YES, 
                     fill=tk.X)
-            self.entries[field,self.ent.get()]
+            self.entries[field] = self.ent.get()
 
 
         self.create = tk.Button(self.usermenu, text='Create User', command= self.checkcreds)
@@ -128,9 +128,8 @@ class login:
 
     def checkcreds(self):
         self.credentials = []
-        for entry in self.entries:
-            print(entry.get())
-            self.credentials.append(entry.get())
+        for field in self.fields:
+            self.credentials.append(self.entries[field])
         self.success,self.unique,self.user = cleareddit.createredditor(self.credentials)
         if self.success == True and self.unique == True:
             self.clicked.set(self.user)
@@ -155,10 +154,17 @@ class login:
 class choosesubs():
     def __init__(self, master,user,sets):
         self.master = master
+
+
         self.wblist = ['Blacklist','Whitelist']
-        self.subreddits = cleareddit.subfind(user.get(),sets[5].get(),sets[6].get())
-        print(self.subreddits)
-        self.listlab = tk.Label(self.master, text = self.wblist[sets[7].get()], font = ("Times", 14))
+        self.user = user
+        self.sets = sets
+
+        
+        self.subreddits = cleareddit.subfind(self.user.get(),self.sets[5].get(),self.sets[6].get())
+
+
+        self.listlab = tk.Label(self.master, text = self.wblist[self.sets[7].get()], font = ("Times", 14))
         self.listlab.grid(row=0,padx=5,pady=5)
 
         self.sublistb = tk.Listbox(self.master, selectmode = "multiple")
@@ -166,8 +172,16 @@ class choosesubs():
         for subreddit in self.subreddits:
             print(subreddit)
             self.sublistb.insert(tk.END,subreddit)
-        self.clearbut = tk.Button(self.master, text = "Clear")
+        
+
+        self.clearbut = tk.Button(self.master, text = "Clear", command = self.clear)
         self.clearbut.grid(row = 2,padx=5,pady=5,sticky="nsew")
+
+    def clear(self):
+        self.subsel = self.sublistb.curselection()
+        self.sublist = ",".join([self.sublistb.get(i) for i in self.subsel])
+        self.master.destroy()
+        cleareddit.clear(self.user.get(),self.sublist,self.sets[0],self.sets[1],self.sets[2],self.sets[3],self.sets[4].get())
 
 def main():
     root = tk.Tk()
