@@ -78,20 +78,26 @@ def clear(user,sublist,delcom,delsub,listtype,daterange,voterange):
     redditor = getredditor(user)
     if delcom == 1:
         for comment in redditor.comments.new():
-            age = (time.time() - comment.created_utc())/86400
-            if comment.subreddit.display_name in sublist and listtype == 1 or daterange[0] < age or daterange[1] > age \
-                or voterange[0] < comment.score or voterange[1] > comment.score or comment.subreddit.display_name not in sublist and listtype == 0:
-                print("keep" + comment.body)
-            else:#or comment.created_utc in daterange and listtype == 1:
-                print("Deleted " + comment.body)
+            age = (time.time() - comment.created_utc)/86400
+            score = comment.score
+            insubs = comment.subreddit.display_name in sublist
+            content = comment.subreddit.display_name
+            clearit(age,score,insubs,content,listtype,daterange,voterange)
 
     if delsub == 1:
         for submission in redditor.submissions.new():
-            age = (time.time() - submission.created_utc())/86400
+            age = (time.time() - submission.created_utc)/86400
             score = submission.score
-            if submission.subreddit.display_name in sublist and listtype == 1 or daterange[0] < age or daterange[1] > age \
-                or voterange[0] < score or voterange[1] > score or submission.subreddit.display_name not in sublist and listtype == 0:
-                print("keep" + submission.title)
-            else:
-                print("Keep comment" + submission.title)
+            insubs = submission.subreddit.display_name in sublist
+            content = submission.title
+            clearit(age,score,insubs,content,listtype,daterange,voterange)
 
+def clearit(age,score,insubs,content,listtype,daterange,voterange):
+    if insubs and listtype == 0:            
+        print("Keep delete" + content)
+    elif insubs and listtype == 1 or daterange[0] < age or daterange[1] > age \
+        or voterange[0] < score or voterange[1] > score or listtype == 0:
+        print("keep" + content)
+    else:
+        print("Keep comment" + content)
+    time.sleep(1)

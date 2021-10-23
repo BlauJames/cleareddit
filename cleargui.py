@@ -30,14 +30,14 @@ class login:
 
         self.mnvlab = tk.Label(self.master, text="Minimum Votes")
         self.mnvlab.grid(row=1,column=0,padx=5,sticky="w")
-        self.minvotes = tk.StringVar()        # self.minvotes.set(-10000000)
+        self.minvotes = tk.IntVar()        # self.minvotes.set(-10000000)
         self.minvoteent = tk.Entry(self.master,textvariable=self.minvotes)
         self.minvoteent.grid(row=1,column=1,padx=5,sticky="ew")
         
         
         self.mxvlab = tk.Label(self.master, text="Maximum Votes")
         self.mxvlab.grid(row=1,column=2,padx=5,sticky="w")
-        self.maxvotes = tk.StringVar()
+        self.maxvotes = tk.IntVar()
         # self.maxvotes.set(10000000)
         self.maxvoteent = tk.Entry(self.master,textvariable=self.maxvotes)
         self.maxvoteent.grid(row=1,column=3,padx=5,sticky="ew")
@@ -45,7 +45,7 @@ class login:
 
         self.edlab = tk.Label(self.master, text="Newest days ago")
         self.edlab.grid(row=2,column=0,padx=5,sticky="w")
-        self.enddays = tk.StringVar()
+        self.enddays = tk.IntVar()
         # self.enddays.set(0)
         self.edent = tk.Entry(self.master,textvariable=self.enddays)
         self.edent.grid(row=2,column=1,padx=5,sticky="ew")
@@ -53,7 +53,7 @@ class login:
 
         self.sdlab = tk.Label(self.master, text="Oldest days ago")
         self.sdlab.grid(row=2,column=2,padx=5,sticky="w")
-        self.startdays = tk.StringVar()
+        self.startdays = tk.IntVar()
         # self.startdays.set(10000)
         self.sdent = tk.Entry(self.master,textvariable=self.startdays)
         self.sdent.grid(row=2,column=3,padx=5,sticky="ew")
@@ -89,7 +89,7 @@ class login:
         
         self.settingbut = tk.Button(self.master, text='Select Subreddits',command = self.subselect)
         self.settingbut.grid(row=4,column=3,padx=5,sticky="ew")
-        self.sets = [self.comdel.get(),self.subdel.get(),self.listtype.get(),[self.minvotes.get(),self.maxvotes.get()],[self.enddays.get(),self.startdays.get()]]
+        
 
     def adduser(self):
         self.usermenu = tk.Toplevel()
@@ -100,7 +100,6 @@ class login:
 
 
         for field in self.fields:
-            print(field)
             self.row = tk.Frame(self.usermenu)
             self.lab = tk.Label(self.row, width=22, text=field+": ", anchor='w')
             self.ent = tk.Entry(self.row)
@@ -143,11 +142,10 @@ class login:
     
     
     def subselect(self):
-        self.settings = []
+        self.sets = [self.comdel.get(),self.subdel.get(),self.listtype.get(),[self.minvotes.get(),self.maxvotes.get()],[self.enddays.get(),self.startdays.get()]]
         self.master.destroy()
         self.master = tk.Tk()
-        print(self.clicked)
-        self.app = choosesubs(self.master,self.clicked,self.sets)
+        self.app = choosesubs(self.master,self.clicked.get(),self.sets)
         self.master.mainloop()
     
 
@@ -159,18 +157,16 @@ class choosesubs():
         self.wblist = ['Blacklist','Whitelist']
         self.user = user
         self.sets = sets
-
         
-        self.subreddits = cleareddit.subfind(self.user.get(),self.sets[5].get(),self.sets[6].get())
+        self.subreddits = cleareddit.subfind(self.user,self.sets[0],self.sets[1])
 
 
-        self.listlab = tk.Label(self.master, text = self.wblist[self.sets[7].get()], font = ("Times", 14))
+        self.listlab = tk.Label(self.master, text = self.wblist[self.sets[2]], font = ("Times", 14))
         self.listlab.grid(row=0,padx=5,pady=5)
 
         self.sublistb = tk.Listbox(self.master, selectmode = "multiple")
         self.sublistb.grid(row=1,padx=5)
         for subreddit in self.subreddits:
-            print(subreddit)
             self.sublistb.insert(tk.END,subreddit)
         
 
@@ -178,10 +174,18 @@ class choosesubs():
         self.clearbut.grid(row = 2,padx=5,pady=5,sticky="nsew")
 
     def clear(self):
+        if self.sets[3][0] == 0 and self.sets[3][1] == 0:
+            self.sets [3][1] = 10000
+
+        if self.sets[4][0] == 0 and self.sets[4][1] == 0:
+            self.sets[4][1] = 1000000
+            self.sets[4][0] = -1000000
+
+
         self.subsel = self.sublistb.curselection()
         self.sublist = ",".join([self.sublistb.get(i) for i in self.subsel])
         self.master.destroy()
-        cleareddit.clear(self.user.get(),self.sublist,self.sets[0],self.sets[1],self.sets[2],self.sets[3],self.sets[4].get())
+        cleareddit.clear(self.user,self.sublist,self.sets[0],self.sets[1],self.sets[2],self.sets[3],self.sets[4])
 
 def main():
     root = tk.Tk()
