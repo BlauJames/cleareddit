@@ -44,19 +44,19 @@ class login:
 
 
         self.edlab = tk.Label(self.master, text="Newest days ago")
-        self.edlab.grid(row=2,column=0,padx=5,sticky="w")
+        self.edlab.grid(row=2,column=2,padx=5,sticky="w")
         self.enddays = tk.IntVar()
         # self.enddays.set(0)
         self.edent = tk.Entry(self.master,textvariable=self.enddays)
-        self.edent.grid(row=2,column=1,padx=5,sticky="ew")
+        self.edent.grid(row=2,column=3,padx=5,sticky="ew")
 
 
         self.sdlab = tk.Label(self.master, text="Oldest days ago")
-        self.sdlab.grid(row=2,column=2,padx=5,sticky="w")
+        self.sdlab.grid(row=2,column=0,padx=5,sticky="w")
         self.startdays = tk.IntVar()
         # self.startdays.set(10000)
         self.sdent = tk.Entry(self.master,textvariable=self.startdays)
-        self.sdent.grid(row=2,column=3,padx=5,sticky="ew")
+        self.sdent.grid(row=2,column=1,padx=5,sticky="ew")
 
         
         self.subdel = tk.IntVar()
@@ -75,7 +75,7 @@ class login:
         
         
         self.listtype = tk.IntVar()
-        self.bwlist = tk.Checkbutton(self.master, text="Blacklist/Whitelist", onvalue = 1, offvalue = 0, variable = self.listtype)
+        self.bwlist = tk.Checkbutton(self.master, text="Whitelist/Blacklist", onvalue = 1, offvalue = 0, variable = self.listtype)
         self.bwlist.grid(row=3,column=2,padx=5)
 
 
@@ -140,9 +140,12 @@ class login:
         else:
             print("User credentials incorrect")
     
+    def errorcheck(self):
+        test = []
+        # Check for invalid values and create an error window
     
     def subselect(self):
-        self.sets = [self.comdel.get(),self.subdel.get(),self.listtype.get(),[self.minvotes.get(),self.maxvotes.get()],[self.enddays.get(),self.startdays.get()]]
+        self.sets = [self.comdel.get(),self.subdel.get(),self.listtype.get(),[self.minvotes.get(),self.maxvotes.get()],[self.startdays.get(),self.enddays.get()]]
         self.master.destroy()
         self.master = tk.Tk()
         self.app = choosesubs(self.master,self.clicked.get(),self.sets)
@@ -154,7 +157,7 @@ class choosesubs():
         self.master = master
 
 
-        self.wblist = ['Blacklist','Whitelist']
+        self.wblist = ['Whitelist','Blacklist']
         self.user = user
         self.sets = sets
         
@@ -175,17 +178,24 @@ class choosesubs():
 
     def clear(self):
         if self.sets[3][0] == 0 and self.sets[3][1] == 0:
-            self.sets [3][1] = 10000
+            self.sets [3][0] = -1000000
+            self.sets [3][1] = 1000000
 
         if self.sets[4][0] == 0 and self.sets[4][1] == 0:
-            self.sets[4][1] = 1000000
-            self.sets[4][0] = -1000000
+            self.sets[4][0] = 10000
+            self.sets[4][1] = 0
+        elif self.sets[4][0] == 0:
+            self.sets[4][0] = 10000
 
 
         self.subsel = self.sublistb.curselection()
         self.sublist = ",".join([self.sublistb.get(i) for i in self.subsel])
         self.master.destroy()
         cleareddit.clear(self.user,self.sublist,self.sets[0],self.sets[1],self.sets[2],self.sets[3],self.sets[4])
+
+class errorwindow:
+    def __init__(self,master):
+        self.master = master
 
 def main():
     root = tk.Tk()

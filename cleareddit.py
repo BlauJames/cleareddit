@@ -92,12 +92,14 @@ def clear(user,sublist,delcom,delsub,listtype,daterange,voterange):
             content = submission.title
             clearit(age,score,insubs,content,listtype,daterange,voterange)
 
-def clearit(age,score,insubs,content,listtype,daterange,voterange):
-    if insubs and listtype == 0:            
-        print("Keep delete" + content)
-    elif insubs and listtype == 1 or daterange[0] < age or daterange[1] > age \
-        or voterange[0] < score or voterange[1] > score or listtype == 0:
+def clearit(age,score,insubs,content,listtype,voterange,daterange):
+    print(age)
+    print(score)
+    if insubs and listtype == 1:            
+        print("delete" + content)
+    elif insubs and listtype == 0 or daterange[0] < age or daterange[1] > age \
+        or voterange[0] > score or voterange[1] < score or listtype == 1:
         print("keep" + content)
     else:
-        print("Keep comment" + content)
+        print("delete" + content)
     time.sleep(1)
