@@ -16,49 +16,89 @@ class login:
         
         
         self.clicked = tk.StringVar()
-        self.clicked.set("Choose User")
-        self.userdrop = tk.OptionMenu(self.master,self.clicked,*self.users).grid(row=0,column=0,columnspan = 2,padx=5,sticky="ew")
-        self.addcred = tk.Button(self.master,text = "Add User",command= self.adduser).grid(row=0,column=2,sticky="ew")#,command = adduser()) ToDo add class for window to add user
-        self.delcred = tk.Button(self.master, text = "Delete User").grid(row=0,column=3,padx=5,sticky="ew")#, command = deleteuser()) Add method in cleareddit to delete user
+        self.clicked.set(self.users[0])
+        self.userdrop = tk.OptionMenu(self.master,self.clicked,*self.users)
+        self.userdrop.grid(row=0,column=0,columnspan = 2,padx=5,sticky="ew")
         
-        self.mnvlab = tk.Label(self.master, text="Minimum Votes").grid(row=1,column=0,padx=5,sticky="w")
-        self.minvotes = tk.StringVar()
-        # self.minvotes.set(-10000000)
-        self.minvoteent = tk.Entry(self.master,textvariable=self.minvotes).grid(row=1,column=1,padx=5,sticky="ew")
-        self.mxvlab = tk.Label(self.master, text="Maximum Votes").grid(row=1,column=2,padx=5,sticky="w")
+        
+        self.addcred = tk.Button(self.master,text = "Add User",command= self.adduser)#,command = adduser()) ToDo add class for window to add user
+        self.addcred.grid(row=0,column=2,sticky="ew")
+        
+        
+        self.delcred = tk.Button(self.master, text = "Delete User")#, command = deleteuser()) Add method in cleareddit to delete user
+        self.delcred.grid(row=0,column=3,padx=5,sticky="ew")
+
+        self.mnvlab = tk.Label(self.master, text="Minimum Votes")
+        self.mnvlab.grid(row=1,column=0,padx=5,sticky="w")
+        self.minvotes = tk.StringVar()        # self.minvotes.set(-10000000)
+        self.minvoteent = tk.Entry(self.master,textvariable=self.minvotes)
+        self.minvoteent.grid(row=1,column=1,padx=5,sticky="ew")
+        
+        
+        self.mxvlab = tk.Label(self.master, text="Maximum Votes")
+        self.mxvlab.grid(row=1,column=2,padx=5,sticky="w")
         self.maxvotes = tk.StringVar()
         # self.maxvotes.set(10000000)
-        self.maxvoteent = tk.Entry(self.master,textvariable=self.maxvotes).grid(row=1,column=3,padx=5,sticky="ew")
+        self.maxvoteent = tk.Entry(self.master,textvariable=self.maxvotes)
+        self.maxvoteent.grid(row=1,column=3,padx=5,sticky="ew")
 
-        self.edlab = tk.Label(self.master, text="Newest days ago").grid(row=2,column=0,padx=5,sticky="w")
+
+        self.edlab = tk.Label(self.master, text="Newest days ago")
+        self.edlab.grid(row=2,column=0,padx=5,sticky="w")
         self.enddays = tk.StringVar()
         # self.enddays.set(0)
-        self.edent = tk.Entry(self.master,textvariable=self.enddays).grid(row=2,column=1,padx=5,sticky="ew")
-        self.sdlab = tk.Label(self.master, text="Oldest days ago").grid(row=2,column=2,padx=5,sticky="w")
+        self.edent = tk.Entry(self.master,textvariable=self.enddays)
+        self.edent.grid(row=2,column=1,padx=5,sticky="ew")
+
+
+        self.sdlab = tk.Label(self.master, text="Oldest days ago")
+        self.sdlab.grid(row=2,column=2,padx=5,sticky="w")
         self.startdays = tk.StringVar()
         # self.startdays.set(10000)
-        self.sdent = tk.Entry(self.master,textvariable=self.startdays).grid(row=2,column=3,padx=5,sticky="ew")
+        self.sdent = tk.Entry(self.master,textvariable=self.startdays)
+        self.sdent.grid(row=2,column=3,padx=5,sticky="ew")
 
         
         self.subdel = tk.IntVar()
-        self.dsb = tk.Checkbutton(self.master, text="Delete Posts", onvalue = 1, offvalue = 0,variable = self.subdel).grid(row=3,column=0,padx=5)
+        self.dsb = tk.Checkbutton(self.master, text="Delete Posts", onvalue = 1, offvalue = 0,variable = self.subdel)
+        self.dsb.grid(row=3,column=0,padx=5)
+        
+        
         self.comdel =tk.IntVar()
-        self.dcb = tk. Checkbutton(self.master,text="Delete Comments",variable = self.comdel).grid(row=3,column=1,padx=5)
+        self.dcb = tk. Checkbutton(self.master,text="Delete Comments",variable = self.comdel)
+        self.dcb.grid(row=3,column=1,padx=5)
+        
+        
         self.awarded = tk.IntVar
-        self.awardcheck = tk. Checkbutton(self.master, text="Keep Awards", onvalue = 1, offvalue = 0, variable = self.awarded).grid(row=3,column=3,padx=5)
+        self.awardcheck = tk. Checkbutton(self.master, text="Keep Awards", onvalue = 1, offvalue = 0, variable = self.awarded)
+        self.awardcheck.grid(row=3,column=3,padx=5)
+        
+        
         self.listtype = tk.IntVar()
-        self.bwlist = tk. Checkbutton(self.master, text="Blacklist/Whitelist", onvalue = 1, offvalue = 0, variable = self.listtype).grid(row=3,column=2,padx=5)
+        self.bwlist = tk.Checkbutton(self.master, text="Blacklist/Whitelist", onvalue = 1, offvalue = 0, variable = self.listtype)
+        self.bwlist.grid(row=3,column=2,padx=5)
 
 
-        self.close = tk.Button(self.master, text='Quit').grid(row=4,column=1,padx=5,sticky="ew")
-        self.clear = tk.Button(self.master, text='Cleareddit').grid(row=4,column=2,sticky="ew")
-        self.settingbut = tk.Button(self.master, text='Select Subreddits',command = self.subselect).grid(row=4,column=3,padx=5,sticky="ew")
-
+        self.close = tk.Button(self.master, text='Quit')
+        self.close.grid(row=4,column=1,padx=5,sticky="ew")
+        
+        
+        self.clear = tk.Button(self.master, text='Cleareddit')
+        self.clear.grid(row=4,column=2,sticky="ew")
+        
+        
+        self.settingbut = tk.Button(self.master, text='Select Subreddits',command = self.subselect)
+        self.settingbut.grid(row=4,column=3,padx=5,sticky="ew")
+        self.sets = [self.clicked,self.minvotes,self.maxvotes,self.enddays,self.startdays,self.comdel,self.subdel,self.listtype]
 
     def adduser(self):
         self.usermenu = tk.Toplevel()
-        self.entries = []
+
+
+        self.entries = {}
         self.fields = ['Client ID', 'Client Secret', 'Password', 'User Agent', 'Username']
+
+
         for field in self.fields:
             print(field)
             self.row = tk.Frame(self.usermenu)
@@ -72,17 +112,21 @@ class login:
             self.ent.pack(side=tk.RIGHT, 
                     expand=tk.YES, 
                     fill=tk.X)
-            self.entries.append(self.ent)
+            self.entries[field,self.ent.get()]
+
+
         self.create = tk.Button(self.usermenu, text='Create User', command= self.checkcreds)
+
         self.close = tk.Button(self.usermenu, text='Quit')
+        
         self.close.pack()
+        
         self.create.pack(side = tk.BOTTOM)
 
     def deluser(self):
         self.var = []
 
     def checkcreds(self):
-        self.sets = [self.clicked,self.minvotes,self.maxvotes,self.enddays,self.startdays,self.comdel,self.subdel,self.listtype]
         self.credentials = []
         for entry in self.entries:
             print(entry.get())
@@ -97,27 +141,33 @@ class login:
             print("User already added")
         else:
             print("User credentials incorrect")
+    
+    
     def subselect(self):
+        self.settings = []
         self.master.destroy()
         self.master = tk.Tk()
-        self.app = choosesubs(self.user,self.sets)
+        print(self.clicked)
+        self.app = choosesubs(self.master,self.clicked,self.sets)
         self.master.mainloop()
     
 
 class choosesubs():
-    def __init__(self, master,user,sets):        
-
+    def __init__(self, master,user,sets):
         self.master = master
-        self.frame = tk.Frame(self.master)
         self.wblist = ['Blacklist','Whitelist']
-        self.subreddits = cleareddit.subfind(user,sets[5].get(),sets[6].get())
-        self.listlab = tk.Label(self.frame, text = self.wblist[sets[7].get()], font = ("Times", 14), padx = 10, pady = 10)
-        self.listlab.pack()
+        self.subreddits = cleareddit.subfind(user.get(),sets[5].get(),sets[6].get())
+        print(self.subreddits)
+        self.listlab = tk.Label(self.master, text = self.wblist[sets[7].get()], font = ("Times", 14))
+        self.listlab.grid(row=0,padx=5,pady=5)
 
-        self.sublistb = tk.Listbox(self.frame, selectmode = "multiple")
-        self.sublistb.pack(padx = 10, pady = 10, expand = YES, fill = "both") 
+        self.sublistb = tk.Listbox(self.master, selectmode = "multiple")
+        self.sublistb.grid(row=1,padx=5)
         for subreddit in self.subreddits:
+            print(subreddit)
             self.sublistb.insert(tk.END,subreddit)
+        self.clearbut = tk.Button(self.master, text = "Clear")
+        self.clearbut.grid(row = 2,padx=5,pady=5,sticky="nsew")
 
 def main():
     root = tk.Tk()
